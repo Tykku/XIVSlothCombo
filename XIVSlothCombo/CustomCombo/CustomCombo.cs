@@ -53,12 +53,12 @@ namespace XIVSlothCombo.CustomComboNS
         /// <param name="newActionID"> Replacement action ID. </param>
         /// <returns> True if the action has changed, otherwise false. </returns>
 
-        public unsafe bool TryInvoke(uint actionID, byte level, uint lastComboMove, float comboTime, out uint newActionID)
+        public bool TryInvoke(uint actionID, byte level, uint lastComboMove, float comboTime, out uint newActionID)
         {
             newActionID = 0;
 
-            if (!Svc.ClientState.IsPvP && ActionManager.Instance()->QueuedActionType == ActionType.Action && ActionManager.Instance()->QueuedActionId != actionID)
-                return false;
+            /*if (!Svc.ClientState.IsPvP && ActionManager.Instance()->QueuedActionType == ActionType.Action && ActionManager.Instance()->QueuedActionId != actionID)
+                return false;*/
 
             if (!IsEnabled(Preset))
                 return false;
