@@ -2,6 +2,7 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Utility;
+using ECommons.DalamudServices;
 using ImGuiNET;
 using System;
 using System.Linq;
@@ -14,6 +15,7 @@ using XIVSlothCombo.CustomComboNS.Functions;
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Extensions;
 using XIVSlothCombo.Services;
+
 
 namespace XIVSlothCombo.Window.Functions
 {
@@ -1226,6 +1228,21 @@ namespace XIVSlothCombo.Window.Functions
             if (preset is CustomComboPreset.AST_DPS_LightSpeed)
                 UserConfig.DrawSliderInt(0, 100, AST.Config.AST_DPS_LightSpeedOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
+            //AOE added
+            if (preset is CustomComboPreset.AST_AOE_Lucid)
+                UserConfig.DrawSliderInt(4000, 9500, AST.Config.AST_LucidDreaming, "Set value for your MP to be at or under for this feature to work", 150, SliderIncrements.Hundreds);
+            
+            if (preset is CustomComboPreset.AST_AOE_Divination)
+                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_AOE_DivinationOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
+
+            if (preset is CustomComboPreset.AST_AOE_LightSpeed)
+                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_AOE_LightSpeedOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
+                        
+            if (preset is CustomComboPreset.AST_AOE_AutoDraw)
+            {
+                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_AOE_DPS_OverwriteCards, "Overwrite Non-DPS Cards", "Will draw even if you have healing cards remaining.");
+            }
+            //end aoe added
 
             if (preset is CustomComboPreset.AST_ST_SimpleHeals)
             {
@@ -1242,17 +1259,38 @@ namespace XIVSlothCombo.Window.Functions
             }
 
             if (preset is CustomComboPreset.AST_ST_SimpleHeals_EssentialDignity)
+            {
                 UserConfig.DrawSliderInt(0, 100, AST.Config.AST_EssentialDignity, "Set percentage value");
+                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveDignity, "Only Weave", "Will only weave this action.");
+            }
+            if (preset is CustomComboPreset.AST_ST_SimpleHeals_CelestialIntersection)
+                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveIntersection, "Only Weave", "Will only weave this action.");
+
+            if (preset is CustomComboPreset.AST_ST_SimpleHeals_Exaltation)
+                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveExalt, "Only Weave", "Will only weave this action.");
 
             if (preset is CustomComboPreset.AST_ST_SimpleHeals_Spire)
+            { 
                 UserConfig.DrawSliderInt(0, 100, AST.Config.AST_Spire, "Set percentage value");
-
+                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveSpire, "Only Weave", "Will only weave this action.");
+            }
             if (preset is CustomComboPreset.AST_ST_SimpleHeals_Ewer)
+            {  
                 UserConfig.DrawSliderInt(0, 100, AST.Config.AST_Ewer, "Set percentage value");
-
+                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveEwer, "Only Weave", "Will only weave this action.");
+            }
+            if (preset is CustomComboPreset.AST_ST_SimpleHeals_Bole)
+            {
+                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_Bole, "Set percentage value");
+                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveBole, "Only Weave", "Will only weave this action.");
+            }
+            if (preset is CustomComboPreset.AST_ST_SimpleHeals_Arrow)
+            {
+                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_Arrow, "Set percentage value");
+                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_WeaveArrow, "Only Weave", "Will only weave this action.");
+            }
             if (preset is CustomComboPreset.AST_ST_SimpleHeals_Esuna)
                 UserConfig.DrawSliderInt(0, 100, AST.Config.AST_ST_SimpleHeals_Esuna, "Stop using when below HP %. Set to Zero to disable this check");
-
 
             if (preset is CustomComboPreset.AST_AoE_SimpleHeals_LazyLady)
                 UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_AoE_SimpleHeals_WeaveLady, "Only Weave", "Will only weave this action.");
@@ -1411,10 +1449,10 @@ namespace XIVSlothCombo.Window.Functions
             {
                 //int[]? actions = Service.Configuration.DancerDanceCompatActionIDs.Cast<int>().ToArray();
                 int[]? actions = Service.Configuration.DancerDanceCompatActionIDs.Select(x => (int)x).ToArray();
-                
+
 
                 bool inputChanged = false;
-                
+
                 inputChanged |= ImGui.InputInt("Emboite (Red) ActionID", ref actions[0], 0);
                 inputChanged |= ImGui.InputInt("Entrechat (Blue) ActionID", ref actions[1], 0);
                 inputChanged |= ImGui.InputInt("Jete (Green) ActionID", ref actions[2], 0);
@@ -1439,44 +1477,44 @@ namespace XIVSlothCombo.Window.Functions
             if (preset == CustomComboPreset.DNC_Variant_Cure)
                 UserConfig.DrawSliderInt(1, 100, DNC.Config.DNCVariantCurePercent, "HP% to be at or under", 200);
 
-            #region Simple ST Sliders
+            #region Advanced ST Sliders
 
-            if (preset == CustomComboPreset.DNC_ST_Simple_SS)
-                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNCSimpleSSBurstPercent, "Target HP% to stop using Standard Step below", 75, SliderIncrements.Ones);
+            if (preset == CustomComboPreset.DNC_ST_Adv_SS)
+                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNC_ST_Adv_SSBurstPercent, "Target HP% to stop using Standard Step below", 75);
 
-            if (preset == CustomComboPreset.DNC_ST_Simple_TS)
-                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNCSimpleTSBurstPercent, "Target HP% to stop using Technical Step below", 75, SliderIncrements.Ones);
+            if (preset == CustomComboPreset.DNC_ST_Adv_TS)
+                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNC_ST_Adv_TSBurstPercent, "Target HP% to stop using Technical Step below", 75);
 
-            if (preset == CustomComboPreset.DNC_ST_Simple_Feathers)
-                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNCSimpleFeatherBurstPercent, "Target HP% to dump all pooled feathers below", 75, SliderIncrements.Ones);
+            if (preset == CustomComboPreset.DNC_ST_Adv_Feathers)
+                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNC_ST_Adv_FeatherBurstPercent, "Target HP% to dump all pooled feathers below", 75);
 
-            if (preset == CustomComboPreset.DNC_ST_Simple_SaberDance)
-                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCSimpleSaberThreshold, "Esprit", 150, SliderIncrements.Fives);
+            if (preset == CustomComboPreset.DNC_ST_Adv_SaberDance)
+                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNC_ST_Adv_SaberThreshold, "Esprit", 150, SliderIncrements.Fives);
 
-            if (preset == CustomComboPreset.DNC_ST_Simple_PanicHeals)
-                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimplePanicHealWaltzPercent, "Curing Waltz HP%", 200, SliderIncrements.Ones);
+            if (preset == CustomComboPreset.DNC_ST_Adv_PanicHeals)
+                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNC_ST_Adv_PanicHealWaltzPercent, "Curing Waltz HP%", 200);
 
-            if (preset == CustomComboPreset.DNC_ST_Simple_PanicHeals)
-                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimplePanicHealWindPercent, "Second Wind HP%", 200, SliderIncrements.Ones);
+            if (preset == CustomComboPreset.DNC_ST_Adv_PanicHeals)
+                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNC_ST_Adv_PanicHealWindPercent, "Second Wind HP%", 200);
 
             #endregion
 
-            #region Simple AoE Sliders
+            #region Advanced AoE Sliders
 
-            if (preset == CustomComboPreset.DNC_AoE_Simple_SS)
-                UserConfig.DrawSliderInt(0, 10, DNC.Config.DNCSimpleSSAoEBurstPercent, "Target HP% to stop using Standard Step below", 75, SliderIncrements.Ones);
+            if (preset == CustomComboPreset.DNC_AoE_Adv_SS)
+                UserConfig.DrawSliderInt(0, 10, DNC.Config.DNC_AoE_Adv_SSBurstPercent, "Target HP% to stop using Standard Step below", 75);
 
-            if (preset == CustomComboPreset.DNC_AoE_Simple_TS)
-                UserConfig.DrawSliderInt(0, 10, DNC.Config.DNCSimpleTSAoEBurstPercent, "Target HP% to stop using Technical Step below", 75, SliderIncrements.Ones);
+            if (preset == CustomComboPreset.DNC_AoE_Adv_TS)
+                UserConfig.DrawSliderInt(0, 10, DNC.Config.DNC_AoE_Adv_TSBurstPercent, "Target HP% to stop using Technical Step below", 75);
 
-            if (preset == CustomComboPreset.DNC_AoE_Simple_SaberDance)
-                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCSimpleAoESaberThreshold, "Esprit", 150, SliderIncrements.Fives);
+            if (preset == CustomComboPreset.DNC_AoE_Adv_SaberDance)
+                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNC_AoE_Adv_SaberThreshold, "Esprit", 150, SliderIncrements.Fives);
 
-            if (preset == CustomComboPreset.DNC_AoE_Simple_PanicHeals)
-                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimpleAoEPanicHealWaltzPercent, "Curing Waltz HP%", 200, SliderIncrements.Ones);
+            if (preset == CustomComboPreset.DNC_AoE_Adv_PanicHeals)
+                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNC_AoE_Adv_PanicHealWaltzPercent, "Curing Waltz HP%", 200);
 
-            if (preset == CustomComboPreset.DNC_AoE_Simple_PanicHeals)
-                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimpleAoEPanicHealWindPercent, "Second Wind HP%", 200, SliderIncrements.Ones);
+            if (preset == CustomComboPreset.DNC_AoE_Adv_PanicHeals)
+                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNC_AoE_Adv_PanicHealWindPercent, "Second Wind HP%", 200);
 
             #endregion
 
@@ -1495,10 +1533,10 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawSliderInt(0, 3000, DRK.Config.DRK_ST_ManaSpenderPooling, "How much MP to save (0 = Use All)", 150, SliderIncrements.Thousands);
 
             if (preset == CustomComboPreset.DRK_ST_CDs_LivingShadow && enabled)
-                UserConfig.DrawSliderInt(0, 100, DRK.Config.DRK_ST_LivingDeadThreshold, "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                UserConfig.DrawSliderInt(0, 30, DRK.Config.DRK_ST_LivingDeadThreshold, "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)", 150, SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DRK_AoE_CDs_LivingShadow && enabled)
-                UserConfig.DrawSliderInt(0, 100, DRK.Config.DRK_AoE_LivingDeadThreshold, "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                UserConfig.DrawSliderInt(0, 60, DRK.Config.DRK_AoE_LivingDeadThreshold, "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)", 150, SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DRKPvP_Burst)
                 UserConfig.DrawSliderInt(1, 100, DRKPvP.Config.ShadowbringerThreshold, "HP% to be at or above to use Shadowbringer");
@@ -1732,6 +1770,50 @@ namespace XIVSlothCombo.Window.Functions
             // ====================================================================================
             #region PALADIN
 
+            // Fight or Flight
+            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_FoF)
+                UserConfig.DrawSliderInt(0, 50, PLD.Config.PLD_ST_FoF_Trigger, "Target HP%", 200);
+
+            if (preset == CustomComboPreset.PLD_AoE_AdvancedMode_FoF)
+                UserConfig.DrawSliderInt(0, 50, PLD.Config.PLD_AoE_FoF_Trigger, "Target HP%", 200);
+
+            // Sheltron
+            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Sheltron)
+                UserConfig.DrawSliderInt(50, 100, PLD.Config.PLD_ST_SheltronOption, "Oath Gauge", 200, 5);
+
+            if (preset == CustomComboPreset.PLD_AoE_AdvancedMode_Sheltron)
+                UserConfig.DrawSliderInt(50, 100, PLD.Config.PLD_AoE_SheltronOption, "Oath Gauge", 200, 5);
+
+            // Intervene
+            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Intervene)
+            {
+                UserConfig.DrawSliderInt(0, 1, PLD.Config.PLD_Intervene_HoldCharges, "Charges", 200);
+                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_Intervene_MeleeOnly, "Melee Range", "Uses Intervene while within melee range.\nMay result in minor movement.", 1);
+                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_Intervene_MeleeOnly, "No Movement", "Only uses Intervene when it would not result in movement (zero distance).", 2);
+            }
+
+            if (preset == CustomComboPreset.PLD_AoE_AdvancedMode_Intervene)
+            {
+                UserConfig.DrawSliderInt(0, 1, PLD.Config.PLD_AoE_Intervene_HoldCharges, "Charges", 200);
+                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_AoE_Intervene_MeleeOnly, "Melee Range", "Uses Intervene while within melee range.\nMay result in minor movement.", 1);
+                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_AoE_Intervene_MeleeOnly, "No Movement", "Only uses Intervene when it would not result in movement (zero distance).", 2);
+            }
+
+            // Shield Lob
+            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_ShieldLob)
+            {
+                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_ShieldLob_SubOption, "Shield Lob Only", "Uses only Shield Lob.", 1);
+                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_ShieldLob_SubOption, "Hardcast Holy Spirit", "Attempts to hardcast Holy Spirit when not moving.\nOtherwise uses Shield Lob.", 2);
+            }
+
+            // MP Reservation
+            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve)
+                UserConfig.DrawSliderInt(1000, 5000, PLD.Config.PLD_ST_MP_Reserve, "Minimum MP", sliderIncrement: 100);
+
+            if (preset == CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve)
+                UserConfig.DrawSliderInt(1000, 5000, PLD.Config.PLD_AoE_MP_Reserve, "Minimum MP", sliderIncrement: 100);
+
+            // Requiescat Spender Feature
             if (preset == CustomComboPreset.PLD_Requiescat_Options)
             {
                 UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "Confiteor", "", 1);
@@ -1741,77 +1823,16 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "Holy Circle", "", 5);
             }
 
-            // Removed Requiescat weaving options pending further assessment - Kaeris
-            //if (preset is CustomComboPreset.PLD_ST_AdvancedMode_Requiescat)
-            //{
-            //    UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_ST_RequiescatWeave, "Standard Weave", "Weaves Requiescat immediately after Fight or Flight for a standard burst window.", 0, 150, ImGuiColors.ParsedGreen);
-            //    UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_ST_RequiescatWeave, "Late Weave", "Late-weaves Requiescat after Fight or Flight.\nEnsures Requiescat's damage falls under the Fight or Flight buff, but may lead to misalignment in longer fights.", 1, 150, ImGuiColors.DalamudYellow);
-            //    ImGui.Spacing();
-            //}
-
-            //if (preset is CustomComboPreset.PLD_AoE_AdvancedMode_Requiescat)
-            //{
-            //    UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_AoE_RequiescatWeave, "Standard Weave", "Weaves Requiescat immediately after Fight or Flight for a standard burst window.", 0, 150, ImGuiColors.ParsedGreen);
-            //    UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_AoE_RequiescatWeave, "Late Weave", "Late-weaves Requiescat after Fight or Flight.\nEnsures Requiescat's damage falls under the Fight or Flight buff, but may lead to misalignment in longer fights.", 1, 150, ImGuiColors.DalamudYellow);
-            //    ImGui.Spacing();
-            //}
-
+            // Spirits Within / Circle of Scorn Feature
             if (preset == CustomComboPreset.PLD_SpiritsWithin)
             {
                 UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "Prioritize Circle of Scorn", "", 1);
                 UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "Prioritize Spirits Within / Expiacion", "", 2);
             }
 
-            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_FoF)
-                UserConfig.DrawSliderInt(0, 100, PLD.Config.PLD_ST_FoF_Option, "Target HP%", 200);
-
-            if (preset == CustomComboPreset.PLD_AoE_AdvancedMode_FoF)
-                UserConfig.DrawSliderInt(0, 100, PLD.Config.PLD_AoE_FoF_Option, "Target HP%", 200);
-
-            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Sheltron)
-                UserConfig.DrawSliderInt(0, 100, PLD.Config.PLD_ST_SheltronHP, "Player HP%", 200);
-
-            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Sheltron)
-                UserConfig.DrawSliderInt(50, 100, PLD.Config.PLD_ST_SheltronOption, "Oath Gauge", 200, 5);
-
-            if (preset == CustomComboPreset.PLD_AoE_AdvancedMode_Sheltron)
-                UserConfig.DrawSliderInt(0, 100, PLD.Config.PLD_AoE_SheltronHP, "Player HP%", 200);
-
-            if (preset == CustomComboPreset.PLD_AoE_AdvancedMode_Sheltron)
-                UserConfig.DrawSliderInt(50, 100, PLD.Config.PLD_AoE_SheltronOption, "Oath Gauge", 200, 5);
-
-            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Intervene)
-                UserConfig.DrawSliderInt(0, 1, PLD.Config.PLD_Intervene_HoldCharges, "Charges", 200);
-
-            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Intervene)
-            {
-                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_Intervene_MeleeOnly, "Melee Range", "Uses Intervene while within melee range.\nMay result in minor movement.", 1);
-                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_Intervene_MeleeOnly, "No Movement", "Only uses Intervene when it would not result in movement (zero distance).", 2);
-            }
-
-            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_ShieldLob)
-            {
-                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_ShieldLob_SubOption, "Shield Lob Only", "Uses only Shield Lob.", 1);
-                UserConfig.DrawHorizontalRadioButton(PLD.Config.PLD_ShieldLob_SubOption, "Hardcast Holy Spirit", "Attempts to hardcast Holy Spirit when not moving.\nOtherwise uses Shield Lob.", 2);
-            }
-
+            // Variant Cure Feature
             if (preset == CustomComboPreset.PLD_Variant_Cure)
                 UserConfig.DrawSliderInt(1, 100, PLD.Config.PLD_VariantCure, "Player HP%", 200);
-
-            // New logic handles early/late spend for Atonement and Holy Spirit automatically - Kaeris
-            //if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Atonement)
-            //{
-            //    UserConfig.DrawRadioButton(PLD.Config.PLD_ST_AtonementTiming, "Early Spend", "Uses Atonement before restarting the basic combo.", 1);
-            //    UserConfig.DrawRadioButton(PLD.Config.PLD_ST_AtonementTiming, "Late Spend", "Uses Atonement before the end of the basic combo.", 2);
-            //    UserConfig.DrawRadioButton(PLD.Config.PLD_ST_AtonementTiming, "Alternate Spend", "Switches between early and and late depending on how often Flight or Fight is used.", 3);
-            //}
-
-            //if (preset == CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit)
-            //{
-            //    UserConfig.DrawRadioButton(PLD.Config.PLD_ST_DivineMightTiming, "Early Spend", "When under the effect of Divine Might, use Holy Spirit before restarting the basic combo.", 1);
-            //    UserConfig.DrawRadioButton(PLD.Config.PLD_ST_DivineMightTiming, "Late Spend", "When under the effect of Divine Might, uses Holy Spirit before the end of the basic combo.", 2);
-            //    UserConfig.DrawRadioButton(PLD.Config.PLD_ST_DivineMightTiming, "Alternate Spend", "When under the effect of Divine Might, switches between early and late depending on how often Flight or Fight is used.", 3);
-            //}
 
             #endregion
             // ====================================================================================
@@ -1837,7 +1858,7 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset == CustomComboPreset.RPR_ST_SoD && enabled)
             {
-                UserConfig.DrawSliderInt(0, 6, RPR.Config.RPR_SoDRefreshRange, "Seconds remaining before refreshing Death's Design.", 150, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(4, 8, RPR.Config.RPR_SoDRefreshRange, "Seconds remaining before refreshing Death's Design.", 150, SliderIncrements.Ones);
                 UserConfig.DrawSliderInt(0, 5, RPR.Config.RPR_SoDThreshold, "Set a HP% Threshold for when SoD will not be automatically applied to the target.", 150, SliderIncrements.Ones);
             }
 
@@ -2002,7 +2023,7 @@ namespace XIVSlothCombo.Window.Functions
             // ====================================================================================
             #region SAGE
 
-            if (preset is CustomComboPreset.SGE_ST_DPS) 
+            if (preset is CustomComboPreset.SGE_ST_DPS)
                 UserConfig.DrawAdditionalBoolChoice(SGE.Config.SGE_ST_DPS_Adv, $"Apply all selected options to {SGE.Dosis2.ActionName()}", $"{SGE.Dosis.ActionName()} & {SGE.Dosis3.ActionName()} will behave normally.");
 
             if (preset is CustomComboPreset.SGE_ST_DPS_EDosis)
@@ -2150,34 +2171,7 @@ namespace XIVSlothCombo.Window.Functions
             // ====================================================================================
             #region SAMURAI
 
-            if (preset == CustomComboPreset.SAM_ST_Overcap && enabled)
-                UserConfig.DrawSliderInt(0, 85, SAM.Config.SAM_ST_KenkiOvercapAmount, "Set the Kenki overcap amount for ST combos.");
-
-            if (preset == CustomComboPreset.SAM_AoE_Overcap && enabled)
-                UserConfig.DrawSliderInt(0, 85, SAM.Config.SAM_AoE_KenkiOvercapAmount, "Set the Kenki overcap amount for AOE combos.");
-
-            if (preset == CustomComboPreset.SAM_ST_GekkoCombo_CDs_MeikyoShisui && enabled)
-            {
-                UserConfig.DrawHorizontalRadioButton(SAM.Config.SAM_MeikyoChoice, "Use after Hakaze/Sen Applier", "Uses Meikyo Shisui after Hakaze, Gekko, Yukikaze, or Kasha.", 1);
-                UserConfig.DrawHorizontalRadioButton(SAM.Config.SAM_MeikyoChoice, "Use outside of combo chain", "Uses Meikyo Shisui outside of a combo chain.", 2);
-            }
-
-            //PvP
-            if (preset == CustomComboPreset.SAMPvP_BurstMode && enabled)
-                UserConfig.DrawSliderInt(0, 2, SAMPvP.Config.SAMPvP_SotenCharges, "How many charges of Soten to keep ready? (0 = Use All).");
-
-            if (preset == CustomComboPreset.SAMPvP_KashaFeatures_GapCloser && enabled)
-                UserConfig.DrawSliderInt(0, 100, SAMPvP.Config.SAMPvP_SotenHP, "Use Soten on enemies below selected HP.");
-
-            //Fillers
-            if (preset == CustomComboPreset.SAM_ST_GekkoCombo_FillerCombos)
-            {
-                UserConfig.DrawHorizontalRadioButton(SAM.Config.SAM_FillerCombo, "2.14+", "2 Filler GCDs", 1);
-                UserConfig.DrawHorizontalRadioButton(SAM.Config.SAM_FillerCombo, "2.06 - 2.08", "3 Filler GCDs. \nWill use Yaten into Enpi as part of filler and Gyoten back into Range.\nHakaze will be delayed by half a GCD after Enpi.", 2);
-                UserConfig.DrawHorizontalRadioButton(SAM.Config.SAM_FillerCombo, "1.99 - 2.01", "4 Filler GCDs. \nUses double Yukikaze loop.", 3);
-            }
-
-            if (preset == CustomComboPreset.SAM_ST_GekkoCombo_CDs_Iaijutsu)
+            if (preset == CustomComboPreset.SAM_ST_CDs_Iaijutsu)
             {
                 UserConfig.DrawSliderInt(0, 100, SAM.Config.SAM_ST_Higanbana_Threshold, "Stop using Higanbana on targets below this HP % (0% = always use).", 150, SliderIncrements.Ones);
             }
@@ -2193,13 +2187,24 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawSliderInt(0, 100, SAM.Config.SAM_AoEBloodbathThreshold, "HP percent threshold to use Bloodbath below (0 = Disabled)", 150, SliderIncrements.Ones);
             }
 
-            if (preset == CustomComboPreset.SAM_ST_Execute)
+            if (preset == CustomComboPreset.SAM_ST_Shinten)
             {
-                UserConfig.DrawSliderInt(0, 100, SAM.Config.SAM_ST_ExecuteThreshold, "HP percent threshold to use Shinten below", 150, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(50, 85, SAM.Config.SAM_ST_KenkiOvercapAmount, "Set the Kenki overcap amount for ST combos.");
+                UserConfig.DrawSliderInt(0, 100, SAM.Config.SAM_ST_ExecuteThreshold, "HP percent threshold to not save Kenki", 150, SliderIncrements.Ones);
             }
+
+            if (preset == CustomComboPreset.SAM_AoE_Kyuten)
+                UserConfig.DrawSliderInt(50, 85, SAM.Config.SAM_AoE_KenkiOvercapAmount, "Set the Kenki overcap amount for AOE combos.");
 
             if (preset == CustomComboPreset.SAM_Variant_Cure)
                 UserConfig.DrawSliderInt(1, 100, SAM.Config.SAM_VariantCure, "HP% to be at or under", 200);
+
+            //PvP
+            if (preset == CustomComboPreset.SAMPvP_BurstMode && enabled)
+                UserConfig.DrawSliderInt(0, 2, SAMPvP.Config.SAMPvP_SotenCharges, "How many charges of Soten to keep ready? (0 = Use All).");
+
+            if (preset == CustomComboPreset.SAMPvP_KashaFeatures_GapCloser && enabled)
+                UserConfig.DrawSliderInt(0, 100, SAMPvP.Config.SAMPvP_SotenHP, "Use Soten on enemies below selected HP.");
 
             #endregion
             // ====================================================================================
@@ -2277,6 +2282,9 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset is CustomComboPreset.SCH_ST_Heal_Esuna)
                 UserConfig.DrawSliderInt(0, 100, SCH.Config.SCH_ST_Heal_EsunaOption, "Stop using when below HP %. Set to Zero to disable this check");
+
+            if (preset is CustomComboPreset.SCH_AoE_Heal)
+                UserConfig.DrawSliderInt(4000, 9500, SCH.Config.SCH_AoE_Heal_LucidOption, "MP Threshold", 150, SliderIncrements.Hundreds);
 
             if (preset is CustomComboPreset.SCH_DeploymentTactics)
             {
@@ -2390,27 +2398,24 @@ namespace XIVSlothCombo.Window.Functions
             // ====================================================================================
             #region VIPER
 
-            if ((preset == CustomComboPreset.VPR_ST_AdvancedMode && enabled) || (preset == CustomComboPreset.VPR_DreadwinderCoils && enabled))
+           /* if ((preset == CustomComboPreset.VPR_ST_AdvancedMode && enabled) || (preset == CustomComboPreset.VPR_VicewinderCoils && enabled))
             {
                 UserConfig.DrawHorizontalRadioButton(VPR.Config.VPR_Positional, "Rear First", "First positional: Swiftskin's Coil.", 0);
                 UserConfig.DrawHorizontalRadioButton(VPR.Config.VPR_Positional, "Flank First", "First positional: Hunter's Coil.", 1);
-            }
+            }*/
 
             if (preset == CustomComboPreset.VPR_ST_UncoiledFury && enabled)
+            {
                 UserConfig.DrawSliderInt(0, 3, VPR.Config.VPR_ST_UncoiledFury_HoldCharges, "How many charges to keep ready? (0 = Use all)");
+                UserConfig.DrawSliderInt(0, 5, VPR.Config.VPR_ST_UncoiledFury_Threshold, "Set a HP% Threshold to use all charges.");
+            }
 
             if (preset == CustomComboPreset.VPR_AoE_UncoiledFury && enabled)
+            {
                 UserConfig.DrawSliderInt(0, 3, VPR.Config.VPR_AoE_UncoiledFury_HoldCharges, "How many charges to keep ready? (0 = Use all)");
-
-            if (preset == CustomComboPreset.VPR_ST_NoxiousGnash)
-            {
-                UserConfig.DrawRoundedSliderFloat(0, 20, VPR.Config.VPR_ST_NoxiousDebuffRefresh, "Seconds remaining before refreshing Noxious Gnash.", digits: 1);
+                UserConfig.DrawSliderInt(0, 5, VPR.Config.VPR_AoE_UncoiledFury_Threshold, "Set a HP% Threshold to use all charges.");
             }
 
-            if (preset == CustomComboPreset.VPR_AoE_NoxiousGnash)
-            {
-                UserConfig.DrawRoundedSliderFloat(0, 20, VPR.Config.VPR_AoE_NoxiousDebuffRefresh, "Seconds remaining before refreshing Noxious Gnash.", digits: 1);
-            }
 
             if (preset is CustomComboPreset.VPR_ST_Reawaken)
             {
@@ -2437,7 +2442,7 @@ namespace XIVSlothCombo.Window.Functions
             if (preset == CustomComboPreset.VPR_ReawakenLegacy && enabled)
             {
                 UserConfig.DrawRadioButton(VPR.Config.VPR_ReawakenLegacyButton, "Replaces Reawaken", "Replaces Reawaken with Full Generation - Legacy combo.", 0);
-                UserConfig.DrawRadioButton(VPR.Config.VPR_ReawakenLegacyButton, "Replaces Dread Fangs", "Replaces Dread Fangs with Full Generation - Legacy combo.", 1);
+                UserConfig.DrawRadioButton(VPR.Config.VPR_ReawakenLegacyButton, "Replaces Steel Fangs", "Replaces Steel Fangs with Full Generation - Legacy combo.", 1);
             }
 
             #endregion
@@ -2514,6 +2519,10 @@ namespace XIVSlothCombo.Window.Functions
             if (preset == CustomComboPreset.WHM_AoE_DPS_Lucid)
                 UserConfig.DrawSliderInt(4000, 9500, WHM.Config.WHM_AoEDPS_Lucid, "Set value for your MP to be at or under for this feature to work", 150, SliderIncrements.Hundreds);
 
+            if (preset == CustomComboPreset.WHM_AoE_DPS_PresenceOfMind)
+                UserConfig.DrawAdditionalBoolChoice(WHM.Config.WHM_AoEDPS_PresenceOfMindWeave, "Only Weave or Use Whilst Moving.", "Holy has no weave window so this can only be used to weave against healing or single target damage spells.\n\n" +
+                    "This will minimize the amount of GCD delay you will get but reduce the frequency it will be used.");
+                
             if (preset == CustomComboPreset.WHM_AoEHeals_Lucid)
                 UserConfig.DrawSliderInt(4000, 9500, WHM.Config.WHM_AoEHeals_Lucid, "Set value for your MP to be at or under for this feature to work", 150, SliderIncrements.Hundreds);
 
@@ -2527,10 +2536,10 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawSliderInt(0, 1, WHM.Config.WHM_AoEHeals_ThinAir, "How many charges to keep ready? (0 = Use all)");
 
             if (preset == CustomComboPreset.WHM_AoEHeals_Cure3)
-                UserConfig.DrawSliderInt(0, 10000, WHM.Config.WHM_AoEHeals_Cure3MP, "Use when MP is above", sliderIncrement: 100);
+                UserConfig.DrawSliderInt(1500, 8500, WHM.Config.WHM_AoEHeals_Cure3MP, "Use when MP is above", sliderIncrement: 500);
 
             if (preset == CustomComboPreset.WHM_STHeals)
-                UserConfig.DrawAdditionalBoolChoice(WHM.Config.WHM_STHeals_UIMouseOver, "Party UI Mousover Checking", "Check party member's HP & Debuffs by using mouseover on the party list.\nTo be used in conjunction with Redirect/Reaction/etc.");
+                UserConfig.DrawAdditionalBoolChoice(WHM.Config.WHM_STHeals_UIMouseOver, "Party UI Mouseover Checking", "Check party member's HP & Debuffs by using mouseover on the party list.\nTo be used in conjunction with Redirect/Reaction/etc.");
 
             if (preset == CustomComboPreset.WHM_STHeals_ThinAir)
                 UserConfig.DrawSliderInt(0, 1, WHM.Config.WHM_STHeals_ThinAir, "How many charges to keep ready? (0 = Use all)");
@@ -2593,13 +2602,13 @@ namespace XIVSlothCombo.Window.Functions
             // ====================================================================================
             #region PvP VALUES
 
-            IPlayerCharacter? pc = Service.ClientState.LocalPlayer;
+            IPlayerCharacter? pc = Svc.ClientState.LocalPlayer;
 
             if (preset == CustomComboPreset.PvP_EmergencyHeals)
             {
                 if (pc != null)
                 {
-                    uint maxHP = Service.ClientState.LocalPlayer?.MaxHp <= 15000 ? 0 : Service.ClientState.LocalPlayer.MaxHp - 15000;
+                    uint maxHP = Svc.ClientState.LocalPlayer?.MaxHp <= 15000 ? 0 : Svc.ClientState.LocalPlayer.MaxHp - 15000;
 
                     if (maxHP > 0)
                     {

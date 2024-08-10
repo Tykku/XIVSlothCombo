@@ -83,7 +83,7 @@ namespace XIVSlothCombo.Combos.PvE
             BrandOfPurgatory = 16515,   // AoE Phoenix GCD
             Rekindle = 25830,           // Healing oGCD Phoenix
             EnkindlePhoenix = 16516,
-            
+
             UmbralImpulse = 36994,          //Single target Solar Bahamut GCD
             UmbralFlare = 36995,            //AoE Solar Bahamut GCD
             Sunflare = 36996,               //Damage oGCD Solar Bahamut
@@ -274,7 +274,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         if (HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
                             return SearingFlash;
-                        
+
                         if (OriginalHook(Ruin) is AstralImpulse or UmbralImpulse or FountainOfFire)
                         {
                             if (IsOffCooldown(OriginalHook(EnkindleBahamut)) && LevelChecked(SummonBahamut))
@@ -285,7 +285,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                             if (IsOffCooldown(Rekindle) && OriginalHook(Ruin) is FountainOfFire)
                                 return OriginalHook(AstralFlow);
-                            
+
                             if (IsOffCooldown(LuxSolaris) && HasEffect(Buffs.RefulgentLux))
                                 return OriginalHook(LuxSolaris);
                         }
@@ -441,7 +441,7 @@ namespace XIVSlothCombo.Combos.PvE
                         {
                             if (IsEnabled(CustomComboPreset.SMN_SearingLight_Burst))
                             {
-                                if (SummonerBurstPhase is 0 or 1 && ((!LevelChecked(SummonSolarBahamut) && OriginalHook(Ruin) is AstralImpulse) || OriginalHook(Ruin) is UmbralImpulse) ||
+                                if (SummonerBurstPhase is 0 or 1 && ((!LevelChecked(SummonSolarBahamut) && OriginalHook(Ruin) is AstralImpulse) || OriginalHook(Ruin) is UmbralImpulse) && DemiAttackCount >= 1 ||
                                     (SummonerBurstPhase == 2 && OriginalHook(Ruin) == FountainOfFire) ||
                                     (SummonerBurstPhase == 3 && OriginalHook(Ruin) is AstralImpulse or UmbralImpulse or FountainOfFire) ||
                                     (SummonerBurstPhase == 4))
@@ -467,7 +467,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                                 if (IsOffCooldown(OriginalHook(EnkindlePhoenix)) && LevelChecked(SummonPhoenix))
                                     return OriginalHook(EnkindlePhoenix);
-                                
+
                                 if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Rekindle))
                                     if (IsOffCooldown(Rekindle) && OriginalHook(Ruin) is FountainOfFire)
                                         return OriginalHook(AstralFlow);
@@ -514,7 +514,9 @@ namespace XIVSlothCombo.Combos.PvE
                         // Demi Nuke
                         if (OriginalHook(Ruin) is AstralImpulse or UmbralImpulse or FountainOfFire)
                         {
-                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsBahamutReady && (LevelChecked(SummonSolarBahamut) || DemiAttackCount >= burstDelay))
+                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsBahamutReady && (LevelChecked(SummonSolarBahamut) || DemiAttackCount >= burstDelay) 
+                                && (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst) || (LevelChecked(SummonSolarBahamut) || HasEffect(Buffs.SearingLight) ||
+                                    AoECombo && IsEnabled(CustomComboPreset.SMN_SearingLight_STOnly))))
                             {
                                 if (IsOffCooldown(OriginalHook(EnkindleBahamut)) && LevelChecked(SummonBahamut))
                                     return OriginalHook(EnkindleBahamut);
@@ -528,24 +530,28 @@ namespace XIVSlothCombo.Combos.PvE
                             {
                                 if (IsOffCooldown(OriginalHook(EnkindlePhoenix)) && LevelChecked(SummonPhoenix) && OriginalHook(Ruin) is FountainOfFire)
                                     return OriginalHook(EnkindlePhoenix);
-                                
+
                                 if (IsOffCooldown(Rekindle) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Rekindle) && OriginalHook(Ruin) is FountainOfFire)
                                     return OriginalHook(AstralFlow);
                             }
-                            
+
                             // Demi Nuke 3: More Boogaloo
-                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsSolarBahamutReady && DemiAttackCount >= burstDelay)
+                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsSolarBahamutReady && DemiAttackCount >= burstDelay && 
+                                (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst) || HasEffect(Buffs.SearingLight) ||
+                                 AoECombo && IsEnabled(CustomComboPreset.SMN_SearingLight_STOnly)))
                             {
                                 if (IsOffCooldown(OriginalHook(EnkindleSolarBahamut)) && LevelChecked(SummonSolarBahamut))
                                     return OriginalHook(EnkindleSolarBahamut);
 
                                 if (IsOffCooldown(Sunflare) && LevelChecked(Sunflare) && OriginalHook(Ruin) is UmbralImpulse)
                                     return OriginalHook(AstralFlow);
-                                
-                                if (IsOffCooldown(LuxSolaris) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_LuxSolaris) && HasEffect(Buffs.RefulgentLux))
-                                    return OriginalHook(LuxSolaris);
                             }
                         }
+                        
+                        // Lux Solaris 
+                        if (IsOffCooldown(LuxSolaris) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_LuxSolaris) && HasEffect(Buffs.RefulgentLux) &&
+                            (PlayerHealthPercentageHp() < 100 || GetBuffRemainingTime(Buffs.RefulgentLux) < 3))
+                            return OriginalHook(LuxSolaris);
 
                         // Fester/Painflare
                         if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_EDFester))
@@ -594,8 +600,8 @@ namespace XIVSlothCombo.Combos.PvE
                     // Demi
                     if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons))
                     {
-                        if (gauge.SummonTimerRemaining == 0 && IsOffCooldown(OriginalHook(Aethercharge)) &&
-                            ((LevelChecked(Aethercharge) && !LevelChecked(SummonBahamut) && InCombat()) ||   // Pre-Bahamut Phase
+                        if (InCombat() && gauge.SummonTimerRemaining == 0 && IsOffCooldown(OriginalHook(Aethercharge)) &&
+                            ((LevelChecked(Aethercharge) && !LevelChecked(SummonBahamut)) ||   // Pre-Bahamut Phase
                              (IsBahamutReady && LevelChecked(SummonBahamut)) ||            // Bahamut Phase
                              (IsPhoenixReady && LevelChecked(SummonPhoenix)) ||            // Phoenix Phase
                              (IsSolarBahamutReady && LevelChecked(SummonSolarBahamut))))   // Solar Bahamut Phase
@@ -793,10 +799,10 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (IsOffCooldown(EnkindleSolarBahamut) && OriginalHook(Ruin) is UmbralImpulse)
                         return OriginalHook(EnkindleBahamut);
-                    
+
                     if ((OriginalHook(AstralFlow) is Deathflare && IsOffCooldown(Deathflare)) || (OriginalHook(AstralFlow) is Rekindle && IsOffCooldown(Rekindle)))
                         return OriginalHook(AstralFlow);
-                    
+
                     if (OriginalHook(AstralFlow) is Sunflare && IsOffCooldown(Sunflare))
                         return OriginalHook(Sunflare);
                 }
