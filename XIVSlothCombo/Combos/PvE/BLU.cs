@@ -47,7 +47,8 @@ namespace XIVSlothCombo.Combos.PvE
             BreathOfMagic = 34567,
             MortalFlame = 34579,
             PeatPelt = 34569,
-            DeepClean = 34570;
+            DeepClean = 34570,
+            GoblinPunch = 34563;
 
         public static class Buffs
         {
@@ -376,7 +377,15 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                return (actionID is SonicBoom && GetTargetDistance() <= 3 && IsSpellActive(SharpenedKnife)) ? SharpenedKnife : actionID;
+                if (actionID is SonicBoom)
+                {
+                    if (GetTargetDistance() <= 3 && IsSpellActive(SharpenedKnife))
+                        return SharpenedKnife;
+                    if (GetTargetDistance() <= 3 && IsSpellActive(SharpenedKnife))
+                        return GoblinPunch;
+                }
+                
+                return actionID;
             }
         }
 
