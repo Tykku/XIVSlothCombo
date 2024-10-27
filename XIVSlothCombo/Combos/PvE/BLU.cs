@@ -381,7 +381,7 @@ namespace XIVSlothCombo.Combos.PvE
                 {
                     if (GetTargetDistance() <= 3 && IsSpellActive(SharpenedKnife))
                         return SharpenedKnife;
-                    if (GetTargetDistance() <= 3 && IsSpellActive(SharpenedKnife))
+                    if (GetTargetDistance() <= 3 && IsSpellActive(GoblinPunch))
                         return GoblinPunch;
                 }
                 
