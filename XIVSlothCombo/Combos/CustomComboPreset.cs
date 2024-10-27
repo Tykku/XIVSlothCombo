@@ -524,8 +524,8 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Perpetual Ray into Sharpened Knife", "Turns Perpetual Ray into Sharpened Knife when target is stunned and in melee range.", BLU.JobID, 8)]
         BLU_PerpetualRayStunCombo = 70014,
 
-        [BlueInactive(BLU.SonicBoom, BLU.SharpenedKnife)]
-        [CustomComboInfo("Sonic Boom Melee", "Turns Sonic Boom into Sharpened Knife when in melee range.", BLU.JobID, 9)]
+        [BlueInactive(BLU.SonicBoom, BLU.SharpenedKnife, BLU.GoblinPunch)]
+        [CustomComboInfo("Sonic Boom Melee", "Turns Sonic Boom into Sharpened Knife or Goblin Punch when in melee range.", BLU.JobID, 9)]
         BLU_MeleeCombo = 70016,
 
         [BlueInactive(BLU.MagicHammer)]
