@@ -2,7 +2,6 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System;
-using System.ComponentModel.Design;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
@@ -452,7 +451,7 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
 
-                        if (LevelChecked(RainOfDeath) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
+                        if (LevelChecked(RainOfDeath) && !WasLastAction(RainOfDeath) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
                         {
                             uint rainOfDeathCharges = LevelChecked(RainOfDeath) ? GetRemainingCharges(RainOfDeath) : 0;
 
@@ -756,7 +755,7 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
 
-                        if (ActionReady(Bloodletter) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
+                        if (ActionReady(Bloodletter) && !(WasLastAction(Bloodletter) || WasLastAction(HeartbreakShot)) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
                         {
                             uint bloodletterCharges = GetRemainingCharges(Bloodletter);
 
@@ -1077,7 +1076,7 @@ namespace XIVSlothCombo.Combos.PvE
                             else return Sidewinder;
                         }
 
-                        if (LevelChecked(RainOfDeath) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
+                        if (LevelChecked(RainOfDeath) && !WasLastAction(RainOfDeath) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
                         {
                             uint rainOfDeathCharges = LevelChecked(RainOfDeath) ? GetRemainingCharges(RainOfDeath) : 0;
 
@@ -1306,7 +1305,7 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
 
-                        if (ActionReady(Bloodletter) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
+                        if (ActionReady(Bloodletter) && !(WasLastAction(Bloodletter) || WasLastAction(HeartbreakShot)) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
                         {
                             uint bloodletterCharges = GetRemainingCharges(Bloodletter);
 
